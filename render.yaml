@@ -2,11 +2,10 @@ services:
   - type: web
     name: agenda-ai
     runtime: ruby
-    plan: starter
+    plan: free
     region: oregon
     buildCommand: "./bin/render-build.sh"
-    preDeployCommand: "bin/rails db:migrate"
-    startCommand: "bin/rails server -b 0.0.0.0 -p $PORT"
+    startCommand: "bundle exec puma -C config/puma.rb"
     envVars:
       - key: RAILS_ENV
         value: production
@@ -14,14 +13,10 @@ services:
         value: "true"
       - key: RAILS_SERVE_STATIC_FILES
         value: "true"
+      - key: SOLID_QUEUE_IN_PUMA
+        value: "true"
       - key: DATABASE_URL
         value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey-pooler.c-2.us-east-2.aws.neon.tech/agenda_ai_production?sslmode=require"
-      - key: QUEUE_DATABASE_URL
-        value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey-pooler.c-2.us-east-2.aws.neon.tech/agenda_ai_production_queue?sslmode=require"
-      - key: CACHE_DATABASE_URL
-        value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey-pooler.c-2.us-east-2.aws.neon.tech/agenda_ai_production_cache?sslmode=require"
-      - key: CABLE_DATABASE_URL
-        value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey-pooler.c-2.us-east-2.aws.neon.tech/agenda_ai_production_cable?sslmode=require"
       - key: STRIPE_PUBLISHABLE_KEY
         value: "pk_test_51U9nPLLnzQiVTVEumen6XGhhTtgPPzPFIRQZgjO3O2Pr6TaT368jzvNxGfVwXYZk2OXOE5HTdumAThFnnNoUrDp700Y9PrY3lt"
       - key: STRIPE_SECRET_KEY
