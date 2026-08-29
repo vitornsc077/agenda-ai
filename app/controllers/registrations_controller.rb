@@ -2,7 +2,7 @@ class RegistrationsController < ApplicationController
   allow_unauthenticated_access only: %i[new create]
 
   def new
-    redirect_to admin_root_path if authenticated?
+    redirect_to admin_root_path if authenticated? && (current_user&.admin? || current_user&.owner?)
     @account = Account.new
     @user = User.new
   end
