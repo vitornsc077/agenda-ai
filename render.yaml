@@ -5,7 +5,7 @@ services:
     plan: free
     region: oregon
     buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec puma -t 5:5 -b tcp://0.0.0.0:$PORT -e production"
+    startCommand: "bundle exec rails db:prepare db:seed && bundle exec puma -t 5:5 -b tcp://0.0.0.0:$PORT -e production"
     envVars:
       - key: RAILS_ENV
         value: production
