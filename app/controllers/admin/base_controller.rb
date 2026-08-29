@@ -8,7 +8,8 @@ module Admin
 
     def ensure_admin_or_owner
       unless current_user&.admin? || current_user&.owner?
-        redirect_to root_path, alert: "Você não tem permissão para acessar esta área."
+        terminate_session
+        redirect_to new_session_path, alert: "Você não tem permissão para acessar esta área."
       end
     end
   end

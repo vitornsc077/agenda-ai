@@ -2,7 +2,13 @@ class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[new create]
 
   def new
-    redirect_to admin_root_path if authenticated?
+    if authenticated?
+      if current_user&.admin? || current_user&.owner?
+        redirect_to admin_root_path
+      elsif current_account&.slug.present?
+        redirect_to public_booking_path(slug: current_account.slug)
+      end
+    end
   end
 
   def create
