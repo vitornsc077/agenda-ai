@@ -5,8 +5,7 @@ services:
     plan: free
     region: oregon
     buildCommand: "./bin/render-build.sh"
-    preDeployCommand: "bundle exec rails db:prepare"
-    startCommand: "bundle exec rails server -b 0.0.0.0 -p $PORT"
+    startCommand: "bundle exec puma -t 5:5 -b tcp://0.0.0.0:$PORT -e production"
     envVars:
       - key: RAILS_ENV
         value: production
@@ -15,7 +14,7 @@ services:
       - key: RAILS_SERVE_STATIC_FILES
         value: "true"
       - key: DATABASE_URL
-        value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey-pooler.c-2.us-east-2.aws.neon.tech/agenda_ai_production?sslmode=require"
+        value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey.c-2.us-east-2.aws.neon.tech/agenda_ai_production?sslmode=require"
       - key: STRIPE_PUBLISHABLE_KEY
         value: "pk_test_51U9nPLLnzQiVTVEumen6XGhhTtgPPzPFIRQZgjO3O2Pr6TaT368jzvNxGfVwXYZk2OXOE5HTdumAThFnnNoUrDp700Y9PrY3lt"
       - key: STRIPE_SECRET_KEY
