@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     end
 
     resource :calendar, controller: :calendar, only: %i[show]
+    resource :api_token, only: %i[show update]
 
     # Stripe Billing & Subscriptions
     get  "billing",                 to: "billing#index",                  as: :billing
@@ -45,6 +46,13 @@ Rails.application.routes.draw do
 
     namespace :api do
       get "availability/:staff_member_id/:date", to: "availability#show"
+    end
+  end
+
+  # REST API for MCP Servers and integrations
+  namespace :api do
+    namespace :v1 do
+      resources :services, only: %i[index create]
     end
   end
 

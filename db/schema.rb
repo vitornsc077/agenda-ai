@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_29_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_190132) do
   create_table "accounts", id: :string, force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.json "brand_colors", default: {}
@@ -138,6 +138,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_140000) do
 
   create_table "users", id: :string, force: :cascade do |t|
     t.string "account_id", null: false
+    t.string "api_token"
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "name", null: false
@@ -145,6 +146,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_140000) do
     t.integer "role", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "email"], name: "index_users_on_account_id_and_email", unique: true
+    t.index ["api_token"], name: "index_users_on_api_token", unique: true
   end
 
   create_table "work_schedules", id: :string, force: :cascade do |t|

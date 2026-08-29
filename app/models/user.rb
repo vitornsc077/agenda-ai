@@ -2,6 +2,7 @@ class User < ApplicationRecord
   include TenantScoped
 
   has_secure_password
+  has_secure_token :api_token
 
   enum :role, {
     member: 0,

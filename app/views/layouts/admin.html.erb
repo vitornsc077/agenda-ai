@@ -70,6 +70,11 @@
           Assinatura & Planos
         <% end %>
 
+        <%= link_to admin_api_token_path, class: "flex items-center gap-3 px-3.5 py-3 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_api_token_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          API & Integração MCP
+        <% end %>
+
         <div class="pt-4 pb-1">
           <p class="px-3.5 text-xs font-bold uppercase tracking-wider text-slate-500">Página Pública</p>
         </div>
@@ -151,6 +156,11 @@
           <%= link_to admin_billing_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_billing_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
             Assinatura & Planos
+          <% end %>
+
+          <%= link_to admin_api_token_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_api_token_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            API & Integração MCP
           <% end %>
 
           <div class="pt-6 pb-2">

@@ -1,0 +1,76 @@
+<% content_for :title, "Integração & API / MCP" %>
+
+<div class="space-y-8 max-w-4xl">
+  <!-- Header -->
+  <div>
+    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Token de API & Integração MCP</h2>
+    <p class="text-xs sm:text-sm text-slate-500 mt-1">Conecte assistentes de IA (Claude, Cursor, Windsurf, LangChain) ao seu AgendaAI através do protocolo MCP.</p>
+  </div>
+
+  <!-- Token Management Card -->
+  <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">🔑</span>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Seu Token de Autenticação</h3>
+          <p class="text-xs text-slate-500">Mantenha seu token em segredo. Ele dá acesso de escrita e leitura à sua conta.</p>
+        </div>
+      </div>
+      <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase">Ativo</span>
+    </div>
+
+    <div class="space-y-2">
+      <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Token Pessoal (Bearer Token)</label>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <input type="text" readonly value="<%= @user.api_token %>" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-mono text-sm select-all focus:outline-none min-h-[44px]">
+        <%= button_to admin_api_token_path, method: :patch, data: { turbo_confirm: "Tem certeza que deseja revogar o token atual e gerar um novo? Qualquer servidor MCP com o token anterior deixará de funcionar até que você o atualize." }, class: "px-4 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-xs shrink-0 cursor-pointer min-h-[44px] flex items-center justify-center" do %>
+          🔄 Gerar Novo Token
+        <% end %>
+      </div>
+      <p class="text-[11px] text-slate-400">Vinculado ao usuário <strong><%= @user.name %></strong> (<%= @user.email %>) na empresa <strong><%= current_account.name %></strong>.</p>
+    </div>
+  </div>
+
+  <!-- MCP Quickstart Guide -->
+  <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-8 rounded-3xl text-white shadow-xl border border-slate-800 space-y-6">
+    <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+      <span class="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-bold text-lg">🤖</span>
+      <div>
+        <h3 class="text-lg font-bold text-white">Como Usar no Claude Desktop ou Cursor (MCP)</h3>
+        <p class="text-xs text-indigo-200">Execute o servidor Python localmente e conecte ao seu assistente de IA preferido.</p>
+      </div>
+    </div>
+
+    <div class="space-y-4 text-xs">
+      <div class="space-y-2">
+        <span class="font-bold text-indigo-300 uppercase tracking-wider block">1. Variáveis de Ambiente no seu arquivo MCP:</span>
+        <pre class="p-4 bg-slate-950/80 rounded-2xl border border-indigo-500/30 text-emerald-400 font-mono overflow-x-auto select-all">{
+  "mcpServers": {
+    "agenda-ai": {
+      "command": "python",
+      "args": ["/caminho/para/mcp_server/server.py"],
+      "env": {
+        "AGENDA_AI_API_TOKEN": "<%= @user.api_token %>",
+        "AGENDA_AI_BASE_URL": "https://agenda-ai-okr3.onrender.com"
+      }
+    }
+  }
+}</pre>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <span class="font-bold text-indigo-300 uppercase tracking-wider block">2. Exemplo de Chamada cURL Direta:</span>
+        <pre class="p-4 bg-slate-950/80 rounded-2xl border border-indigo-500/30 text-indigo-200 font-mono overflow-x-auto select-all">curl -X POST https://agenda-ai-okr3.onrender.com/api/v1/services \
+  -H "Authorization: Bearer <%= @user.api_token %>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Barba Terapia VIP",
+    "duration_minutes": 45,
+    "price_reais": 60.00,
+    "description": "Barboterapia completa com toalha quente e óleos essenciais"
+  }'</pre>
+      </div>
+    </div>
+  </div>
+</div>
