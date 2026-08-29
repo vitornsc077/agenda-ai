@@ -1,36 +1,36 @@
 <% content_for :title, "Equipe" %>
 
 <div class="space-y-6">
-  <div class="flex items-center justify-between">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
-      <h2 class="text-lg font-bold text-slate-900">Profissionais da Equipe</h2>
-      <p class="text-xs text-slate-500">Gerencie quem presta os serviços e configure os horários de trabalho de cada um.</p>
+      <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Profissionais da Equipe</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Gerencie quem presta os serviços e configure os horários de trabalho de cada um.</p>
     </div>
-    <%= link_to new_admin_staff_member_path, class: "inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all" do %>
+    <%= link_to new_admin_staff_member_path, class: "inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all w-full sm:w-auto min-h-[42px]" do %>
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       Novo Profissional
     <% end %>
   </div>
 
   <% if @staff_members.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       <% @staff_members.each do |staff| %>
-        <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4">
+        <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs hover:shadow-sm transition-shadow flex flex-col justify-between space-y-4">
           <div class="space-y-3">
             <div class="flex items-start justify-between gap-3">
               <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-extrabold text-lg shadow-md shadow-indigo-500/20">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-extrabold text-lg shadow-xs shadow-indigo-500/20 shrink-0">
                   <%= staff.name.first.upcase %>
                 </div>
-                <div>
-                  <h3 class="text-base font-bold text-slate-900 leading-tight"><%= staff.name %></h3>
-                  <p class="text-xs text-slate-500"><%= staff.email %></p>
+                <div class="truncate">
+                  <h3 class="text-base font-bold text-slate-900 leading-tight truncate"><%= staff.name %></h3>
+                  <p class="text-xs text-slate-500 truncate"><%= staff.email %></p>
                 </div>
               </div>
               <% if staff.active? %>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase">Ativo</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase shrink-0">Ativo</span>
               <% else %>
-                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase">Inativo</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase shrink-0">Inativo</span>
               <% end %>
             </div>
 
@@ -45,14 +45,14 @@
           </div>
 
           <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-100">
-            <%= link_to "Horários & Agenda", admin_staff_member_path(staff), class: "flex-1 text-center py-2 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-colors" %>
-            <%= link_to "Editar", edit_admin_staff_member_path(staff), class: "py-2 px-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors" %>
+            <%= link_to "Horários & Agenda", admin_staff_member_path(staff), class: "flex-1 text-center py-2.5 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-colors min-h-[38px] flex items-center justify-center" %>
+            <%= link_to "Editar", edit_admin_staff_member_path(staff), class: "py-2.5 px-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors min-h-[38px] flex items-center justify-center" %>
           </div>
         </div>
       <% end %>
     </div>
   <% else %>
-    <div class="bg-white rounded-3xl border border-dashed border-slate-300 p-12 text-center space-y-4">
+    <div class="bg-white rounded-3xl border border-dashed border-slate-300 p-8 sm:p-12 text-center space-y-4">
       <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl mx-auto">
         👥
       </div>
@@ -60,7 +60,7 @@
         <h3 class="text-base font-bold text-slate-900">Nenhum profissional cadastrado</h3>
         <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">Adicione os membros da equipe para definir seus horários de atendimento.</p>
       </div>
-      <%= link_to "Cadastrar Profissional", new_admin_staff_member_path, class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all" %>
+      <%= link_to "Cadastrar Profissional", new_admin_staff_member_path, class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-xs transition-all min-h-[44px]" %>
     </div>
   <% end %>
 </div>

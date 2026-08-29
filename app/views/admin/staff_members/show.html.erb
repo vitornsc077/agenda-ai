@@ -1,28 +1,28 @@
 <% content_for :title, "Horários · #{@staff_member.name}" %>
 
-<div class="space-y-8 max-w-4xl">
+<div class="space-y-6 sm:space-y-8 max-w-4xl">
   <!-- Profile Summary -->
-  <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div class="flex items-center space-x-4">
-      <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-xl shadow-lg shadow-indigo-600/30">
+      <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-indigo-600/30 shrink-0">
         <%= @staff_member.name.first.upcase %>
       </div>
       <div>
-        <h2 class="text-lg font-bold text-slate-900"><%= @staff_member.name %></h2>
-        <p class="text-xs text-slate-500"><%= @staff_member.email %> <%= @staff_member.phone.present? ? "· #{@staff_member.phone}" : "" %></p>
+        <h2 class="text-lg font-bold text-slate-900 leading-tight"><%= @staff_member.name %></h2>
+        <p class="text-xs text-slate-500 mt-0.5"><%= @staff_member.email %> <%= @staff_member.phone.present? ? "· #{@staff_member.phone}" : "" %></p>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <%= link_to "Editar Perfil", edit_admin_staff_member_path(@staff_member), class: "px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700" %>
-      <%= link_to "← Voltar à Equipe", admin_staff_members_path, class: "px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700" %>
+    <div class="flex items-center gap-2 w-full sm:w-auto">
+      <%= link_to "Editar Perfil", edit_admin_staff_member_path(@staff_member), class: "flex-1 sm:flex-none text-center px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-700 min-h-[40px] flex items-center justify-center" %>
+      <%= link_to "← Voltar", admin_staff_members_path, class: "flex-1 sm:flex-none text-center px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 min-h-[40px] flex items-center justify-center" %>
     </div>
   </div>
 
   <!-- Weekly Working Hours -->
-  <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+  <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
     <div>
       <h3 class="text-base font-bold text-slate-900">Horários Semanais de Atendimento</h3>
-      <p class="text-xs text-slate-500">Defina os dias da semana e horários em que <%= @staff_member.name %> aceita agendamentos.</p>
+      <p class="text-xs text-slate-500 mt-0.5">Defina os dias da semana e horários em que <%= @staff_member.name %> aceita agendamentos.</p>
     </div>
 
     <%= form_with url: admin_staff_member_work_schedules_path(@staff_member), method: :patch, class: "space-y-4" do |f| %>
@@ -31,55 +31,55 @@
           <% schedule = @staff_member.work_schedules.find_or_initialize_by(day_of_week: day) %>
           <div class="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3 w-44">
-              <%= check_box_tag "schedules[#{schedule.id}][enabled]", "1", schedule.enabled?, class: "w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" %>
+              <%= check_box_tag "schedules[#{schedule.id}][enabled]", "1", schedule.enabled?, class: "w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" %>
               <span class="text-sm font-bold text-slate-800"><%= WorkSchedule::DAYS[day] %></span>
             </div>
 
             <div class="flex items-center gap-2">
               <span class="text-xs text-slate-400">Das</span>
-              <%= text_field_tag "schedules[#{schedule.id}][start_time]", schedule.start_time || "09:00", class: "w-24 px-3 py-1.5 rounded-lg border border-slate-300 text-sm font-mono text-center" %>
+              <%= text_field_tag "schedules[#{schedule.id}][start_time]", schedule.start_time || "09:00", class: "w-24 px-3 py-2 rounded-xl border border-slate-300 text-sm font-mono text-center min-h-[40px]" %>
               <span class="text-xs text-slate-400">às</span>
-              <%= text_field_tag "schedules[#{schedule.id}][end_time]", schedule.end_time || "18:00", class: "w-24 px-3 py-1.5 rounded-lg border border-slate-300 text-sm font-mono text-center" %>
+              <%= text_field_tag "schedules[#{schedule.id}][end_time]", schedule.end_time || "18:00", class: "w-24 px-3 py-2 rounded-xl border border-slate-300 text-sm font-mono text-center min-h-[40px]" %>
             </div>
           </div>
         <% end %>
       </div>
 
       <div class="pt-4 border-t border-slate-100 flex justify-end">
-        <%= f.submit "Salvar Horários da Semana", class: "px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer transition-all" %>
+        <%= f.submit "Salvar Horários da Semana", class: "w-full sm:w-auto px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer transition-all min-h-[44px]" %>
       </div>
     <% end %>
   </div>
 
   <!-- Schedule Overrides / Date Blocks (Férias / Bloqueios) -->
-  <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+  <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
       <div>
         <h3 class="text-base font-bold text-slate-900">Bloqueios & Exceções (Férias / Folgas)</h3>
-        <p class="text-xs text-slate-500">Bloqueie datas específicas para que nenhum cliente possa agendar.</p>
+        <p class="text-xs text-slate-500 mt-0.5">Bloqueie datas específicas para que nenhum cliente possa agendar.</p>
       </div>
     </div>
 
     <!-- Add Override Form -->
-    <%= form_with url: admin_staff_member_schedule_overrides_path(@staff_member), method: :post, class: "p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4" do |f| %>
-      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+    <%= form_with url: admin_staff_member_schedule_overrides_path(@staff_member), method: :post, class: "p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4" do |f| %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 items-end">
         <div>
           <%= label_tag "schedule_override[override_date]", "Data do Bloqueio", class: "block text-[11px] font-bold uppercase text-slate-600 mb-1" %>
-          <%= date_field_tag "schedule_override[override_date]", Date.current, min: Date.current, required: true, class: "w-full px-3 py-2 bg-white rounded-lg border border-slate-300 text-xs" %>
+          <%= date_field_tag "schedule_override[override_date]", Date.current, min: Date.current, required: true, class: "w-full px-3 py-2.5 bg-white rounded-xl border border-slate-300 text-xs min-h-[40px]" %>
         </div>
 
         <div>
           <%= label_tag "schedule_override[start_time]", "Início (opcional)", class: "block text-[11px] font-bold uppercase text-slate-600 mb-1" %>
-          <%= text_field_tag "schedule_override[start_time]", nil, placeholder: "Dia todo", class: "w-full px-3 py-2 bg-white rounded-lg border border-slate-300 text-xs" %>
+          <%= text_field_tag "schedule_override[start_time]", nil, placeholder: "Dia todo", class: "w-full px-3 py-2.5 bg-white rounded-xl border border-slate-300 text-xs min-h-[40px]" %>
         </div>
 
         <div>
           <%= label_tag "schedule_override[reason]", "Motivo", class: "block text-[11px] font-bold uppercase text-slate-600 mb-1" %>
-          <%= text_field_tag "schedule_override[reason]", nil, placeholder: "Ex: Férias, Médico, Folga", class: "w-full px-3 py-2 bg-white rounded-lg border border-slate-300 text-xs" %>
+          <%= text_field_tag "schedule_override[reason]", nil, placeholder: "Ex: Férias, Médico, Folga", class: "w-full px-3 py-2.5 bg-white rounded-xl border border-slate-300 text-xs min-h-[40px]" %>
         </div>
 
         <div>
-          <%= f.submit "+ Adicionar Bloqueio", class: "w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg cursor-pointer transition-all" %>
+          <%= f.submit "+ Adicionar Bloqueio", class: "w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl cursor-pointer transition-all min-h-[40px]" %>
         </div>
       </div>
     <% end %>
@@ -90,14 +90,14 @@
         <% @schedule_overrides.each do |override| %>
           <div class="p-4 flex items-center justify-between gap-4 bg-white hover:bg-slate-50">
             <div class="flex items-center gap-3">
-              <span class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm font-bold">🚫</span>
+              <span class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm font-bold shrink-0">🚫</span>
               <div>
                 <p class="text-sm font-bold text-slate-900"><%= override.override_date.strftime("%d/%m/%Y") %> · <%= override.full_day? ? "Dia Inteiro Bloqueado" : "#{override.start_time} às #{override.end_time}" %></p>
                 <p class="text-xs text-slate-500"><%= override.reason.presence || "Sem motivo informado" %></p>
               </div>
             </div>
 
-            <%= button_to admin_staff_member_schedule_override_path(@staff_member, override), method: :delete, data: { turbo_confirm: "Remover este bloqueio?" }, class: "text-xs font-semibold text-rose-600 hover:text-rose-800 p-2 rounded-lg hover:bg-rose-50" do %>
+            <%= button_to admin_staff_member_schedule_override_path(@staff_member, override), method: :delete, data: { turbo_confirm: "Remover este bloqueio?" }, class: "text-xs font-semibold text-rose-600 hover:text-rose-800 p-2 rounded-lg hover:bg-rose-50 min-h-[38px] flex items-center" do %>
               Remover
             <% end %>
           </div>
