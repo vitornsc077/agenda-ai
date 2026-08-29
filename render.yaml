@@ -5,15 +5,13 @@ services:
     plan: free
     region: oregon
     buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec puma -C config/puma.rb"
+    startCommand: "bundle exec rails server -b 0.0.0.0 -p $PORT"
     envVars:
       - key: RAILS_ENV
         value: production
       - key: RAILS_LOG_TO_STDOUT
         value: "true"
       - key: RAILS_SERVE_STATIC_FILES
-        value: "true"
-      - key: SOLID_QUEUE_IN_PUMA
         value: "true"
       - key: DATABASE_URL
         value: "postgresql://neondb_owner:npg_pjBHEvSV7W4i@ep-square-haze-aecjxjey-pooler.c-2.us-east-2.aws.neon.tech/agenda_ai_production?sslmode=require"
