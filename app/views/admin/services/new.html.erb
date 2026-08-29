@@ -1,0 +1,10 @@
+<% content_for :title, "Novo Serviço" %>
+
+<div class="max-w-3xl space-y-6">
+  <div>
+    <h2 class="text-xl font-bold text-slate-900">Cadastrar Novo Serviço</h2>
+    <p class="text-xs text-slate-500">Defina o nome, tempo de duração e preço do atendimento.</p>
+  </div>
+
+  <%= render "form", service: @service, staff_members: @staff_members %>
+</div>

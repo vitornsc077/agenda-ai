@@ -1,0 +1,16 @@
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1e293b; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
+  <div style="text-align: center; margin-bottom: 24px;">
+    <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin: 0 0 8px 0;">Lembrete de Agendamento ⏰</h1>
+    <p style="color: #64748b; font-size: 16px; margin: 0;">Seu atendimento em <strong><%= @account.name %></strong> é amanhã!</p>
+  </div>
+
+  <div style="background-color: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 24px; border: 1px solid #edf2f7;">
+    <p style="margin: 6px 0;"><strong>Serviço:</strong> <%= @service.name %></p>
+    <p style="margin: 6px 0;"><strong>Profissional:</strong> <%= @staff.name %></p>
+    <p style="margin: 6px 0;"><strong>Horário:</strong> <%= @booking.starts_at.strftime("%d/%m/%Y às %H:%M") %></p>
+  </div>
+
+  <div style="text-align: center;">
+    <a href="<%= public_booking_confirmation_url(slug: @account.slug, token: @booking.token) %>" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 600;">Ver Detalhes da Reserva</a>
+  </div>
+</div>

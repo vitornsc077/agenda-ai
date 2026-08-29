@@ -1,0 +1,106 @@
+<% content_for :title, "Detalhes do Agendamento" %>
+
+<div class="max-w-3xl space-y-6">
+  <!-- Back button and Status -->
+  <div class="flex items-center justify-between">
+    <%= link_to "← Voltar aos Agendamentos", admin_bookings_path, class: "text-xs font-semibold text-slate-500 hover:text-slate-900" %>
+    <div>
+      <% case @booking.status %>
+      <% when "confirmed" %>
+        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs">Confirmado</span>
+      <% when "completed" %>
+        <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-xs">Concluído</span>
+      <% when "cancelled" %>
+        <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-bold text-xs">Cancelado</span>
+      <% when "no_show" %>
+        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-xs">Não Compareceu (No-Show)</span>
+      <% else %>
+        <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 font-bold text-xs"><%= @booking.status.titleize %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Booking Info Card -->
+  <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+    <div class="border-b border-slate-100 pb-6 flex items-start justify-between">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Serviço</span>
+        <h2 class="text-2xl font-extrabold text-slate-900 mt-1"><%= @booking.service.name %></h2>
+        <p class="text-sm font-semibold text-emerald-600 mt-0.5"><%= @booking.formatted_price %> · <%= @booking.duration_minutes %> minutos</p>
+      </div>
+
+      <div class="text-right">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Data e Horário</span>
+        <p class="text-base font-bold text-slate-900 mt-1"><%= @booking.starts_at.strftime("%d/%m/%Y") %></p>
+        <p class="text-sm font-semibold text-indigo-600 font-mono"><%= @booking.starts_at.strftime("%H:%M") %> às <%= @booking.ends_at.strftime("%H:%M") %></p>
+      </div>
+    </div>
+
+    <!-- Client & Staff -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+        <span class="text-[11px] font-bold uppercase text-slate-400">Dados do Cliente</span>
+        <h3 class="text-sm font-bold text-slate-900"><%= @booking.client.name %></h3>
+        <p class="text-xs text-slate-600">✉️ <%= @booking.client.email %></p>
+        <% if @booking.client.phone.present? %>
+          <p class="text-xs text-slate-600">📱 <%= @booking.client.phone %></p>
+        <% end %>
+        <p class="text-[11px] text-slate-400 pt-1">Histórico: <%= @booking.client.bookings_count %> agendamento(s)</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+        <span class="text-[11px] font-bold uppercase text-slate-400">Profissional Responsável</span>
+        <h3 class="text-sm font-bold text-slate-900"><%= @booking.staff_member.name %></h3>
+        <p class="text-xs text-slate-600">✉️ <%= @booking.staff_member.email %></p>
+        <% if @booking.staff_member.phone.present? %>
+          <p class="text-xs text-slate-600">📱 <%= @booking.staff_member.phone %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @booking.notes.present? %>
+      <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-100 text-xs">
+        <span class="font-bold text-amber-900 block mb-1">Observações do Cliente:</span>
+        <p class="text-amber-800"><%= @booking.notes %></p>
+      </div>
+    <% end %>
+
+    <% if @booking.cancellation_reason.present? %>
+      <div class="p-4 rounded-2xl bg-rose-50 border border-rose-100 text-xs">
+        <span class="font-bold text-rose-900 block mb-1">Motivo do Cancelamento:</span>
+        <p class="text-rose-800"><%= @booking.cancellation_reason %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Status Transition Buttons -->
+  <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-4">
+    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Alterar Status:</span>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <% unless @booking.confirmed? %>
+        <%= button_to confirm_admin_booking_path(@booking), method: :patch, class: "px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs" do %>
+          ✓ Confirmar
+        <% end %>
+      <% end %>
+
+      <% unless @booking.completed? %>
+        <%= button_to complete_admin_booking_path(@booking), method: :patch, class: "px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs" do %>
+          ✓ Marcar Concluído
+        <% end %>
+      <% end %>
+
+      <% unless @booking.no_show? %>
+        <%= button_to no_show_admin_booking_path(@booking), method: :patch, class: "px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all shadow-xs" do %>
+          ⚠️ Não Compareceu
+        <% end %>
+      <% end %>
+
+      <% unless @booking.cancelled? %>
+        <%= button_to cancel_admin_booking_path(@booking), method: :patch, data: { turbo_confirm: "Confirmar cancelamento deste agendamento?" }, class: "px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs" do %>
+          ✕ Cancelar Agendamento
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

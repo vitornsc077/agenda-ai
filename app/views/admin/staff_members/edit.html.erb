@@ -1,0 +1,10 @@
+<% content_for :title, "Editar Profissional" %>
+
+<div class="max-w-3xl space-y-6">
+  <div>
+    <h2 class="text-xl font-bold text-slate-900">Editar Profissional</h2>
+    <p class="text-xs text-slate-500">Altere informações cadastrais de <%= @staff_member.name %>.</p>
+  </div>
+
+  <%= render "form", staff_member: @staff_member, services: @services %>
+</div>

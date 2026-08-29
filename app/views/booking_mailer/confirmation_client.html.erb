@@ -1,0 +1,36 @@
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1e293b; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
+  <div style="text-align: center; margin-bottom: 24px;">
+    <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin: 0 0 8px 0;">Agendamento Confirmado! 🎉</h1>
+    <p style="color: #64748b; font-size: 16px; margin: 0;">Seu horário está garantido em <strong><%= @account.name %></strong>.</p>
+  </div>
+
+  <div style="background-color: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 24px; border: 1px solid #edf2f7;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Serviço:</td>
+        <td style="padding: 8px 0; color: #0f172a; font-size: 15px; font-weight: 600; text-align: right;"><%= @service.name %></td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Profissional:</td>
+        <td style="padding: 8px 0; color: #0f172a; font-size: 15px; font-weight: 600; text-align: right;"><%= @staff.name %></td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Data:</td>
+        <td style="padding: 8px 0; color: #0f172a; font-size: 15px; font-weight: 600; text-align: right;"><%= @booking.starts_at.strftime("%d/%m/%Y") %></td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Horário:</td>
+        <td style="padding: 8px 0; color: #0f172a; font-size: 15px; font-weight: 600; text-align: right;"><%= @booking.starts_at.strftime("%H:%M") %> - <%= @booking.ends_at.strftime("%H:%M") %></td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Valor:</td>
+        <td style="padding: 8px 0; color: #059669; font-size: 15px; font-weight: 700; text-align: right;"><%= @booking.formatted_price %></td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="text-align: center; margin-top: 24px;">
+    <p style="font-size: 13px; color: #94a3b8;">Precisa cancelar ou remarcar?</p>
+    <a href="<%= public_booking_confirmation_url(slug: @account.slug, token: @booking.token) %>" style="display: inline-block; background-color: #f1f5f9; color: #334155; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 6px;">Gerenciar Agendamento</a>
+  </div>
+</div>

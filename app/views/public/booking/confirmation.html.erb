@@ -1,0 +1,85 @@
+<% content_for :title, @booking.cancelled? ? "Agendamento Cancelado" : "Comprovante de Agendamento" %>
+
+<div class="max-w-xl mx-auto space-y-6">
+  <div class="glass-panel p-8 sm:p-10 rounded-3xl shadow-2xl border border-slate-800 text-center space-y-6">
+    <% if @booking.cancelled? %>
+      <div class="w-16 h-16 rounded-3xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-3xl mx-auto border border-rose-500/40" aria-hidden="true">
+        ✕
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-white">Agendamento Cancelado</h1>
+        <p class="text-xs text-slate-400 mt-1">Este horário foi liberado com sucesso.</p>
+      </div>
+    <% else %>
+      <div class="w-16 h-16 rounded-3xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto border border-emerald-500/40 shadow-xl shadow-emerald-500/20 animate-bounce-short" aria-hidden="true">
+        ✓
+      </div>
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          Reserva Confirmada
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Tudo pronto, <%= @client.name %>!</h1>
+        <p class="text-xs text-slate-400">Enviamos os detalhes da sua reserva para <strong><%= @client.email %></strong>.</p>
+      </div>
+    <% end %>
+
+    <!-- Appointment Receipt Card -->
+    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 text-left space-y-3.5" role="region" aria-label="Detalhes da Reserva">
+      <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Estabelecimento</span>
+        <span class="text-sm font-bold text-white"><%= @account.name %></span>
+      </div>
+
+      <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Serviço</span>
+        <span class="text-sm font-bold text-indigo-300"><%= @service.name %></span>
+      </div>
+
+      <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Profissional</span>
+        <span class="text-sm font-bold text-white"><%= @staff.name %></span>
+      </div>
+
+      <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Data</span>
+        <span class="text-sm font-bold text-white"><%= @booking.starts_at.strftime("%d/%m/%Y (%A)") %></span>
+      </div>
+
+      <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Horário</span>
+        <span class="text-sm font-mono font-bold text-indigo-400"><%= @booking.starts_at.strftime("%H:%M") %> às <%= @booking.ends_at.strftime("%H:%M") %></span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Valor</span>
+        <span class="text-sm font-extrabold text-emerald-400"><%= @booking.formatted_price %></span>
+      </div>
+    </div>
+
+    <!-- Quick Calendar Add & Share (When not cancelled) -->
+    <% unless @booking.cancelled? %>
+      <% 
+        google_cal_url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=#{CGI.escape(@service.name + ' - ' + @account.name)}&dates=#{@booking.starts_at.utc.strftime('%Y%m%dT%H%M%SZ')}/#{@booking.ends_at.utc.strftime('%Y%m%dT%H%M%SZ')}&details=#{CGI.escape('Profissional: ' + @staff.name)}&location=#{CGI.escape(@account.name)}"
+      %>
+      <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+        <a href="<%= google_cal_url %>" target="_blank" rel="noopener noreferrer" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-600/30 text-xs font-bold transition-all flex items-center justify-center gap-2">
+          <span>📅 Adicionar ao Google Calendar</span>
+        </a>
+      </div>
+    <% end %>
+
+    <!-- Actions -->
+    <div class="space-y-3 pt-3 border-t border-slate-800">
+      <% unless @booking.cancelled? %>
+        <%= form_with url: public_booking_cancel_path(slug: @account.slug, token: @booking.token), method: :patch, data: { turbo_confirm: "Tem certeza que deseja cancelar seu agendamento?" } do %>
+          <button type="submit" class="w-full py-3 px-4 rounded-xl border border-rose-800/60 bg-rose-950/30 hover:bg-rose-900/50 text-rose-300 text-xs font-bold cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500">
+            Cancelar este Agendamento
+          </button>
+        <% end %>
+      <% end %>
+
+      <%= link_to "← Fazer Novo Agendamento", public_booking_path(slug: @account.slug), class: "block w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold transition-colors text-center" %>
+    </div>
+  </div>
+</div>

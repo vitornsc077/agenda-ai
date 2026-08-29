@@ -1,0 +1,75 @@
+<% content_for :title, "Serviços" %>
+
+<div class="space-y-6">
+  <!-- Header Action -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-lg font-bold text-slate-900">Catálogo de Serviços</h2>
+      <p class="text-xs text-slate-500">Configure os serviços que seus clientes poderão agendar online.</p>
+    </div>
+    <%= link_to new_admin_service_path, class: "inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Novo Serviço
+    <% end %>
+  </div>
+
+  <!-- Services Grid / Table -->
+  <% if @services.any? %>
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <div class="divide-y divide-slate-100">
+        <% @services.each do |service| %>
+          <div class="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
+            <div class="space-y-1">
+              <div class="flex items-center gap-3">
+                <h3 class="text-base font-bold text-slate-900"><%= service.name %></h3>
+                <% if service.active? %>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase">Ativo</span>
+                <% else %>
+                  <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase">Inativo</span>
+                <% end %>
+              </div>
+              <p class="text-xs text-slate-500 line-clamp-1"><%= service.description.presence || "Sem descrição informada" %></p>
+              <div class="flex items-center gap-4 text-xs font-semibold text-slate-600 pt-1">
+                <span class="flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <%= service.duration_minutes %> minutos
+                </span>
+                <span class="flex items-center gap-1 text-emerald-600 font-bold">
+                  <%= service.formatted_price %>
+                </span>
+                <span class="text-slate-400">·</span>
+                <span class="text-slate-500">
+                  <%= service.staff_members.any? ? "#{service.staff_members.count} profissional(is) atendem" : "Todos os profissionais atendem" %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <%= button_to toggle_active_admin_service_path(service), method: :patch, class: "px-3 py-1.5 rounded-lg border text-xs font-semibold #{service.active? ? 'border-slate-200 text-slate-600 hover:bg-slate-100' : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}" do %>
+                <%= service.active? ? "Desativar" : "Ativar" %>
+              <% end %>
+
+              <%= link_to "Editar", edit_admin_service_path(service), class: "px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold transition-colors" %>
+
+              <%= button_to admin_service_path(service), method: :delete, data: { turbo_confirm: "Tem certeza que deseja excluir o serviço '#{service.name}'?" }, class: "p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-3xl border border-dashed border-slate-300 p-12 text-center space-y-4">
+      <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl mx-auto">
+        ✂️
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Nenhum serviço cadastrado</h3>
+        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">Crie seu primeiro serviço para que seus clientes possam visualizar e agendar horários.</p>
+      </div>
+      <%= link_to "Cadastrar Primeiro Serviço", new_admin_service_path, class: "inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all" %>
+    </div>
+  <% end %>
+</div>

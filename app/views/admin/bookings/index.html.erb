@@ -1,0 +1,108 @@
+<% content_for :title, "Agendamentos" %>
+
+<div class="space-y-6">
+  <!-- Header Action -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-bold text-slate-900">Histórico & Gestão de Agendamentos</h2>
+      <p class="text-xs text-slate-500">Acompanhe todos os compromissos, altere status e registre agendamentos manuais.</p>
+    </div>
+    <%= link_to new_admin_booking_path, class: "inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Novo Agendamento Manual
+    <% end %>
+  </div>
+
+  <!-- Filters Bar -->
+  <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+    <%= form_with url: admin_bookings_path, method: :get, class: "flex flex-wrap items-center gap-3" do %>
+      <div>
+        <%= select_tag :status, options_for_select([["Todos os Status", ""], ["Confirmado", "confirmed"], ["Concluído", "completed"], ["Cancelado", "cancelled"], ["Não Compareceu (No-Show)", "no_show"], ["Pendente", "pending"]], params[:status]), class: "px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-700 focus:ring-indigo-500", onchange: "this.form.submit()" %>
+      </div>
+
+      <div>
+        <%= select_tag :staff_member_id, options_for_select([["Todos os Profissionais", ""]] + @staff_members.map { |s| [s.name, s.id] }, params[:staff_member_id]), class: "px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-700 focus:ring-indigo-500", onchange: "this.form.submit()" %>
+      </div>
+
+      <div>
+        <%= select_tag :service_id, options_for_select([["Todos os Serviços", ""]] + @services.map { |s| [s.name, s.id] }, params[:service_id]), class: "px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white text-slate-700 focus:ring-indigo-500", onchange: "this.form.submit()" %>
+      </div>
+
+      <div>
+        <%= date_field_tag :date, params[:date], placeholder: "Filtrar por data", class: "px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-white text-slate-700 focus:ring-indigo-500", onchange: "this.form.submit()" %>
+      </div>
+
+      <% if params[:status].present? || params[:staff_member_id].present? || params[:service_id].present? || params[:date].present? %>
+        <%= link_to "Limpar Filtros", admin_bookings_path, class: "text-xs font-semibold text-rose-600 hover:text-rose-700 ml-2" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Bookings List -->
+  <% if @bookings.any? %>
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <th class="p-4 pl-6">Data / Horário</th>
+              <th class="p-4">Cliente</th>
+              <th class="p-4">Serviço</th>
+              <th class="p-4">Profissional</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right pr-6">Ações</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-xs">
+            <% @bookings.each do |booking| %>
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="p-4 pl-6 font-mono">
+                  <span class="font-bold text-slate-900 block"><%= booking.starts_at.strftime("%d/%m/%Y") %></span>
+                  <span class="text-indigo-600 font-semibold"><%= booking.starts_at.strftime("%H:%M") %> - <%= booking.ends_at.strftime("%H:%M") %></span>
+                </td>
+                <td class="p-4">
+                  <span class="font-bold text-slate-900 block"><%= booking.client.name %></span>
+                  <span class="text-slate-500 block text-[11px]"><%= booking.client.email %> <%= booking.client.phone.present? ? "· #{booking.client.phone}" : "" %></span>
+                </td>
+                <td class="p-4">
+                  <span class="font-semibold text-slate-800 block"><%= booking.service.name %></span>
+                  <span class="text-emerald-600 font-bold text-[11px]"><%= booking.formatted_price %></span>
+                </td>
+                <td class="p-4 text-slate-700 font-medium">
+                  <%= booking.staff_member.name %>
+                </td>
+                <td class="p-4">
+                  <% case booking.status %>
+                  <% when "confirmed" %>
+                    <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] uppercase">Confirmado</span>
+                  <% when "completed" %>
+                    <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-[10px] uppercase">Concluído</span>
+                  <% when "cancelled" %>
+                    <span class="px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-bold text-[10px] uppercase">Cancelado</span>
+                  <% when "no_show" %>
+                    <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px] uppercase">No-Show</span>
+                  <% else %>
+                    <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 font-bold text-[10px] uppercase"><%= booking.status %></span>
+                  <% end %>
+                </td>
+                <td class="p-4 text-right pr-6 space-x-1">
+                  <%= link_to "Ver", admin_booking_path(booking), class: "px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-3xl border border-dashed border-slate-300 p-12 text-center space-y-4">
+      <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl mx-auto">
+        📋
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Nenhum agendamento encontrado</h3>
+        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">Nenhum registro corresponde aos filtros selecionados.</p>
+      </div>
+    </div>
+  <% end %>
+</div>

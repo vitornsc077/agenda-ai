@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+  <head>
+    <meta charset="utf-8">
+    <title><%= content_for(:title) ? "#{yield(:title)} · AgendaAI" : "Agendar Horário Online · AgendaAI" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Agendamento online rápido, seguro e acessível com confirmação instantânea.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    </style>
+  </head>
+
+  <body class="min-h-full flex flex-col justify-between bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+    <!-- Skip link for keyboard accessibility (WCAG 2.4.1) -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded-xl focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-white text-xs font-bold">
+      Pular para o conteúdo principal
+    </a>
+
+    <!-- Top decorative gradient line -->
+    <div class="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400" aria-hidden="true"></div>
+
+    <div class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <!-- Flash notices (Accessible live alerts) -->
+      <% if notice %>
+        <div role="status" aria-live="polite" class="mb-6 p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-sm font-medium backdrop-blur-md flex items-center gap-3 shadow-lg shadow-emerald-950/40 animate-fade-in">
+          <svg class="w-5 h-5 text-emerald-400 shrink-0" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span><%= notice %></span>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div role="alert" aria-live="assertive" class="mb-6 p-4 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-sm font-medium backdrop-blur-md flex items-center gap-3 shadow-lg shadow-rose-950/40 animate-fade-in">
+          <svg class="w-5 h-5 text-rose-400 shrink-0" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <span><%= alert %></span>
+        </div>
+      <% end %>
+
+      <!-- Main Semantic Content -->
+      <main id="main-content" tabindex="-1" class="focus:outline-none">
+        <%= yield %>
+      </main>
+    </div>
+
+    <!-- Semantic Footer with Legal & Accessibility compliance -->
+    <footer class="w-full border-t border-slate-800/80 bg-slate-950/90 py-6 px-4 text-center mt-auto" role="contentinfo">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div class="flex items-center gap-2">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="font-medium text-slate-300">Conexão Segura & Criptografada (SSL / TLS)</span>
+        </div>
+
+        <div class="flex items-center gap-4 text-[11px]">
+          <span>Conforme LGPD (Lei nº 13.709/18)</span>
+          <span class="text-slate-700">·</span>
+          <span>Acessibilidade WCAG 2.1 AA</span>
+        </div>
+
+        <div>
+          <span class="text-slate-400 font-medium">Plataforma</span>
+          <span class="font-bold text-slate-200 ml-1">⚡ AgendaAI</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

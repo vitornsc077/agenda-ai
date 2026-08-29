@@ -1,0 +1,246 @@
+<% content_for :title, "Agendamento Online · #{@account.name}" %>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+  <!-- Left Column: Business Profile & Live Summary Card -->
+  <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-8" aria-label="Informações do Estabelecimento">
+    <!-- Business Profile Card -->
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl border border-slate-800">
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-600 to-emerald-400 flex items-center justify-center font-black text-white text-2xl shadow-xl shadow-indigo-500/20 shrink-0" aria-hidden="true">
+          <%= @account.name.first.upcase %>
+        </div>
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true"></span>
+            Agenda Oficial
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-tight"><%= @account.name %></h1>
+          <p class="text-xs text-slate-400">Fuso: <%= @account.timezone %></p>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800/80 pt-5 space-y-3.5 text-xs text-slate-300">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-indigo-400 shrink-0" aria-hidden="true">
+            ⚡
+          </div>
+          <div>
+            <span class="block font-semibold text-white">Confirmação Instantânea</span>
+            <span class="text-[11px] text-slate-400">Comprovante enviado para o seu e-mail</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-400 shrink-0" aria-hidden="true">
+            🔒
+          </div>
+          <div>
+            <span class="block font-semibold text-white">Cancelamento Fácil</span>
+            <span class="text-[11px] text-slate-400">Link direto para remarcar ou cancelar</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Selection Summary -->
+      <% if @selected_service %>
+        <div class="border-t border-slate-800/80 pt-5 space-y-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-700/60" aria-label="Resumo do Serviço Selecionado">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-300 block">Resumo do Agendamento:</span>
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-white truncate"><%= @selected_service.name %></span>
+            <span class="text-sm font-extrabold text-emerald-400 shrink-0 ml-2"><%= @selected_service.formatted_price %></span>
+          </div>
+          <div class="flex flex-col gap-1 text-xs text-slate-300">
+            <span>⏱️ Duração: <strong><%= @selected_service.duration_minutes %> minutos</strong></span>
+            <% if @selected_staff %>
+              <span>👤 Profissional: <strong><%= @selected_staff.name %></strong></span>
+            <% else %>
+              <span>👤 Profissional: <strong>Qualquer Disponível</strong></span>
+            <% end %>
+            <span>📅 Data: <strong><%= @selected_date.strftime("%d/%m/%Y (%A)") %></strong></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </aside>
+
+  <!-- Right Column: Step-by-Step Interactive Form -->
+  <section class="lg:col-span-8 space-y-6" aria-label="Etapas do Agendamento">
+    <!-- Step 1: Select Service -->
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-5 shadow-xl border border-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-600/30" aria-hidden="true">1</span>
+          <div>
+            <h2 class="text-base font-bold text-white">Escolha o Serviço</h2>
+            <p class="text-xs text-slate-400">Selecione o procedimento que deseja realizar</p>
+          </div>
+        </div>
+        <span class="text-xs font-semibold text-indigo-300"><%= @services.count %> opções</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5" role="region" aria-label="Lista de serviços">
+        <% @services.each do |service| %>
+          <% is_selected = (service == @selected_service) %>
+          <%= link_to public_booking_path(slug: @account.slug, service_id: service.id, staff_member_id: params[:staff_member_id], date: @selected_date), class: "relative flex flex-col justify-between p-4 rounded-2xl border #{is_selected ? 'border-indigo-500 bg-indigo-950/50 ring-2 ring-indigo-500/50' : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-800/60'} transition-all group" do %>
+            <div class="space-y-1.5">
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors"><%= service.name %></span>
+                <span class="text-xs font-extrabold text-emerald-400 shrink-0 bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-500/30"><%= service.formatted_price %></span>
+              </div>
+              <% if service.description.present? %>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed"><%= service.description %></p>
+              <% end %>
+            </div>
+
+            <div class="pt-3 mt-3 border-t border-slate-800/60 flex items-center text-[11px] font-medium text-slate-400 gap-1.5">
+              <svg class="w-3.5 h-3.5 text-indigo-400 shrink-0" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Duração: <strong class="text-slate-300"><%= service.duration_minutes %> min</strong></span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Step 2: Select Staff Member (Only if more than 1) -->
+    <% if @staff_members.count > 1 %>
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-5 shadow-xl border border-slate-800">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-600/30" aria-hidden="true">2</span>
+            <div>
+              <h2 class="text-base font-bold text-white">Escolha o Profissional</h2>
+              <p class="text-xs text-slate-400">Prefere ser atendido por alguém em especial?</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" role="region" aria-label="Lista de profissionais">
+          <!-- Any staff option -->
+          <% is_any_selected = params[:staff_member_id].blank? %>
+          <%= link_to public_booking_path(slug: @account.slug, service_id: @selected_service&.id, date: @selected_date), class: "flex items-center gap-3 p-3.5 rounded-2xl border #{is_any_selected ? 'border-indigo-500 bg-indigo-950/50 ring-2 ring-indigo-500/50' : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-800/60'} transition-all" do %>
+            <div class="w-9 h-9 rounded-xl bg-slate-800 text-white flex items-center justify-center text-sm font-bold shrink-0" aria-hidden="true">✨</div>
+            <div class="truncate">
+              <span class="text-xs font-bold text-white block truncate">Qualquer Disponível</span>
+              <span class="text-[10px] text-slate-400 block truncate">Maior disponibilidade</span>
+            </div>
+          <% end %>
+
+          <!-- Named staff members -->
+          <% @staff_members.each do |staff| %>
+            <% is_staff_selected = (params[:staff_member_id] == staff.id) %>
+            <%= link_to public_booking_path(slug: @account.slug, service_id: @selected_service&.id, staff_member_id: staff.id, date: @selected_date), class: "flex items-center gap-3 p-3.5 rounded-2xl border #{is_staff_selected ? 'border-indigo-500 bg-indigo-950/50 ring-2 ring-indigo-500/50' : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-800/60'} transition-all" do %>
+              <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-xs" aria-hidden="true">
+                <%= staff.name.first.upcase %>
+              </div>
+              <div class="truncate">
+                <span class="text-xs font-bold text-white block truncate"><%= staff.name %></span>
+                <span class="text-[10px] text-slate-400 block truncate"><%= staff.bio.presence || "Especialista" %></span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Form for Booking Submission (Steps 3 & 4) -->
+    <%= form_with url: public_booking_create_path(slug: @account.slug), method: :post, class: "space-y-6" do |f| %>
+      <%= hidden_field_tag :service_id, @selected_service&.id %>
+      <%= hidden_field_tag :staff_member_id, params[:staff_member_id] %>
+
+      <!-- Step 3: Date & Available Slots -->
+      <fieldset class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 shadow-xl border border-slate-800">
+        <legend class="sr-only">Passo 3: Escolha da Data e Horário</legend>
+        <div class="flex items-center gap-3 border-b border-slate-800/80 pb-4">
+          <span class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-600/30" aria-hidden="true">
+            <%= @staff_members.count > 1 ? "3" : "2" %>
+          </span>
+          <div>
+            <h2 class="text-base font-bold text-white">Escolha a Data e o Horário</h2>
+            <p class="text-xs text-slate-400">Navegue pelos dias disponíveis abaixo</p>
+          </div>
+        </div>
+
+        <!-- 14-Day Date Carousel -->
+        <div class="space-y-2">
+          <span class="block text-xs font-bold uppercase tracking-wider text-slate-300">Selecione o Dia</span>
+          <div class="flex items-center gap-2 overflow-x-auto pb-3 pt-1" role="tablist" aria-label="Seletor de dias">
+            <% (0..13).each do |offset| %>
+              <% date = Date.current + offset.days %>
+              <% is_date_selected = (date == @selected_date) %>
+              <%= link_to public_booking_path(slug: @account.slug, service_id: @selected_service&.id, staff_member_id: params[:staff_member_id], date: date), role: "tab", aria: { selected: is_date_selected }, class: "shrink-0 flex flex-col items-center justify-center w-16 py-3 px-1 rounded-2xl border transition-all #{is_date_selected ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-600/40 ring-2 ring-indigo-400' : 'bg-slate-900/90 border-slate-800 text-slate-300 hover:border-slate-600 hover:bg-slate-800'}" do %>
+                <span class="text-[10px] font-bold uppercase tracking-wider <%= is_date_selected ? 'text-indigo-100' : 'text-slate-400' %>"><%= WorkSchedule::DAYS[date.wday][0..2] %></span>
+                <span class="text-base font-black my-0.5"><%= date.day %></span>
+                <span class="text-[9px] <%= is_date_selected ? 'text-indigo-100 font-semibold' : 'text-slate-400' %>"><%= date.strftime("%b") %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Slots Turbo Frame Component -->
+        <%= render "public/booking/slots", slots: @available_slots, selected_date: @selected_date, selected_service: @selected_service, selected_staff: @selected_staff %>
+      </fieldset>
+
+      <!-- Step 4: Client Information & LGPD Compliance -->
+      <fieldset class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 shadow-xl border border-slate-800">
+        <legend class="sr-only">Passo 4: Dados de Contato e Consentimento</legend>
+        <div class="flex items-center gap-3 border-b border-slate-800/80 pb-4">
+          <span class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-600/30" aria-hidden="true">
+            <%= @staff_members.count > 1 ? "4" : "3" %>
+          </span>
+          <div>
+            <h2 class="text-base font-bold text-white">Seus Dados de Contato</h2>
+            <p class="text-xs text-slate-400">Para enviarmos a confirmação e o lembrete</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="client_name" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              Seu Nome Completo <span class="text-rose-400" aria-hidden="true">*</span>
+            </label>
+            <input type="text" id="client_name" name="client_name" required placeholder="Como podemos te chamar?" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all">
+          </div>
+
+          <div>
+            <label for="client_email" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              Seu E-mail <span class="text-rose-400" aria-hidden="true">*</span>
+            </label>
+            <input type="email" id="client_email" name="client_email" required placeholder="seu@email.com" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="client_phone" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              WhatsApp / Celular <span class="text-slate-400 font-normal">(opcional)</span>
+            </label>
+            <input type="tel" id="client_phone" name="client_phone" placeholder="(11) 99999-9999" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all">
+          </div>
+
+          <div>
+            <label for="notes" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              Observações ou Preferências <span class="text-slate-400 font-normal">(opcional)</span>
+            </label>
+            <input type="text" id="notes" name="notes" placeholder="Algum detalhe importante para o profissional?" class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all">
+          </div>
+        </div>
+
+        <!-- LGPD Privacy consent notice -->
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 leading-relaxed flex items-start gap-2.5">
+          <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          <p>
+            <strong>Privacidade Garantida (LGPD):</strong> Seus dados de contato são utilizados unicamente pelo estabelecimento <strong><%= @account.name %></strong> para confirmação, envio de lembretes e comunicação sobre o seu agendamento.
+          </p>
+        </div>
+      </fieldset>
+
+      <!-- Submit Button -->
+      <div class="pt-2">
+        <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:from-emerald-400 hover:to-indigo-500 text-white font-extrabold text-base rounded-2xl shadow-xl shadow-emerald-950/40 transition-all duration-200 cursor-pointer transform active:scale-95 flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-emerald-500/50">
+          <span>✓ Confirmar Meu Agendamento</span>
+        </button>
+        <p class="text-center text-xs text-slate-400 mt-2.5">Você receberá a confirmação imediata por e-mail.</p>
+      </div>
+    <% end %>
+  </section>
+</div>

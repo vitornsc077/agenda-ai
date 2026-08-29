@@ -1,0 +1,84 @@
+<turbo-frame id="booking_slots">
+  <div class="space-y-5" aria-live="polite">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">
+          Horários disponíveis em <%= selected_date.strftime("%d/%m/%Y") %>
+        </h3>
+        <p class="text-[11px] text-slate-400 mt-0.5">Selecione o melhor horário para seu atendimento</p>
+      </div>
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-xs font-bold">
+        <%= slots.count %> disponíveis
+      </span>
+    </div>
+
+    <% if slots.any? %>
+      <% 
+        morning_slots = slots.select { |s| s.start_time < "12:00" }
+        afternoon_slots = slots.select { |s| s.start_time >= "12:00" && s.start_time < "18:00" }
+        night_slots = slots.select { |s| s.start_time >= "18:00" }
+      %>
+
+      <div class="space-y-4">
+        <!-- Morning -->
+        <% if morning_slots.any? %>
+          <div>
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-amber-400 mb-2 flex items-center gap-1.5">
+              <span>🌅</span> Manhã
+            </span>
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" role="radiogroup" aria-label="Horários da manhã">
+              <% morning_slots.each do |slot| %>
+                <label for="slot_<%= slot.starts_at.to_i %>" class="relative flex items-center justify-center min-h-[46px] p-3 rounded-2xl border border-slate-700/80 bg-slate-800/80 hover:border-indigo-400 hover:bg-slate-700/80 text-center cursor-pointer transition-all duration-150 has-checked:border-indigo-500 has-checked:bg-indigo-600/30 has-checked:ring-2 has-checked:ring-indigo-400 active:scale-95">
+                  <input type="radio" id="slot_<%= slot.starts_at.to_i %>" name="starts_at" value="<%= slot.starts_at.iso8601 %>" required class="sr-only" aria-label="Horário <%= slot.start_time %>">
+                  <span class="text-sm font-extrabold text-white font-mono tracking-tight"><%= slot.start_time %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Afternoon -->
+        <% if afternoon_slots.any? %>
+          <div>
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-amber-300 mb-2 flex items-center gap-1.5">
+              <span>☀️</span> Tarde
+            </span>
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" role="radiogroup" aria-label="Horários da tarde">
+              <% afternoon_slots.each do |slot| %>
+                <label for="slot_<%= slot.starts_at.to_i %>" class="relative flex items-center justify-center min-h-[46px] p-3 rounded-2xl border border-slate-700/80 bg-slate-800/80 hover:border-indigo-400 hover:bg-slate-700/80 text-center cursor-pointer transition-all duration-150 has-checked:border-indigo-500 has-checked:bg-indigo-600/30 has-checked:ring-2 has-checked:ring-indigo-400 active:scale-95">
+                  <input type="radio" id="slot_<%= slot.starts_at.to_i %>" name="starts_at" value="<%= slot.starts_at.iso8601 %>" required class="sr-only" aria-label="Horário <%= slot.start_time %>">
+                  <span class="text-sm font-extrabold text-white font-mono tracking-tight"><%= slot.start_time %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Night -->
+        <% if night_slots.any? %>
+          <div>
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-indigo-300 mb-2 flex items-center gap-1.5">
+              <span>🌙</span> Noite
+            </span>
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" role="radiogroup" aria-label="Horários da noite">
+              <% night_slots.each do |slot| %>
+                <label for="slot_<%= slot.starts_at.to_i %>" class="relative flex items-center justify-center min-h-[46px] p-3 rounded-2xl border border-slate-700/80 bg-slate-800/80 hover:border-indigo-400 hover:bg-slate-700/80 text-center cursor-pointer transition-all duration-150 has-checked:border-indigo-500 has-checked:bg-indigo-600/30 has-checked:ring-2 has-checked:ring-indigo-400 active:scale-95">
+                  <input type="radio" id="slot_<%= slot.starts_at.to_i %>" name="starts_at" value="<%= slot.starts_at.iso8601 %>" required class="sr-only" aria-label="Horário <%= slot.start_time %>">
+                  <span class="text-sm font-extrabold text-white font-mono tracking-tight"><%= slot.start_time %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-10 px-6 rounded-3xl border border-dashed border-slate-800 bg-slate-900/60 space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center text-xl mx-auto mb-2" aria-hidden="true">
+          📅
+        </div>
+        <p class="text-sm font-bold text-slate-200">Sem horários livres nesta data</p>
+        <p class="text-xs text-slate-400 max-w-sm mx-auto">Não há vagas disponíveis para <%= selected_date.strftime("%d/%m/%Y") %>. Por favor, escolha outra data acima.</p>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>

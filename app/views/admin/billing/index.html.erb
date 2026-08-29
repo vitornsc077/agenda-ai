@@ -1,0 +1,137 @@
+<% content_for :title, "Assinatura & Planos" %>
+
+<div class="space-y-8 max-w-5xl mx-auto">
+  <!-- Header with Current Status -->
+  <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="space-y-1">
+      <div class="flex items-center gap-2.5">
+        <h2 class="text-xl font-bold text-slate-900">Seu Plano Atual</h2>
+        <% badge = @trial_service.status_badge %>
+        <span class="px-3 py-1 rounded-full text-xs font-bold <%= badge[:class] %>"><%= badge[:text] %></span>
+      </div>
+      <p class="text-xs text-slate-500">
+        <% if @account.active_subscription? %>
+          Assinatura ativa vinculada à conta <strong><%= @account.name %></strong>.
+          <% if @account.current_period_end.present? %>
+            Próxima renovação em <%= @account.current_period_end.strftime("%d/%m/%Y") %>.
+          <% end %>
+        <% elsif @account.trial? %>
+          Você está no período de avaliação gratuita de 14 dias com acesso a todos os recursos.
+        <% else %>
+          Seu período de teste expirou. Escolha um plano abaixo para reativar seus agendamentos online.
+        <% end %>
+      </p>
+    </div>
+
+    <% if @account.active_subscription? && @account.stripe_customer_id.present? %>
+      <%= button_to admin_billing_portal_path, method: :post, data: { turbo: false }, class: "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all shrink-0 cursor-pointer" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Gerenciar no Portal Stripe
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Plans Title -->
+  <div class="text-center space-y-2 py-2">
+    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Planos transparentes para fazer seu negócio crescer</h3>
+    <p class="text-sm text-slate-500 max-w-lg mx-auto">Escolha o plano ideal para sua empresa. Sem taxas ocultas, cancele quando quiser.</p>
+  </div>
+
+  <!-- Pricing Cards Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+    <!-- Monthly Plan Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-8">
+      <div class="space-y-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider">Mensal</span>
+          <h4 class="text-xl font-bold text-slate-900 mt-2">Plano Mensal</h4>
+          <p class="text-xs text-slate-500 mt-1">Flexibilidade total para o seu negócio.</p>
+        </div>
+
+        <div class="flex items-baseline gap-1">
+          <span class="text-4xl font-extrabold text-slate-900">R$ 79,90</span>
+          <span class="text-sm font-semibold text-slate-400">/ mês</span>
+        </div>
+
+        <ul class="space-y-3 text-xs text-slate-600 border-t border-slate-100 pt-6">
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span><strong>Agendamentos online ilimitados</strong></span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Página de agendamento exclusiva com seu link</span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Gestão de equipe e múltiplos horários</span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Notificações e confirmações por e-mail</span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Cancele quando quiser</span>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <%= form_with url: admin_billing_checkout_path, method: :post, data: { turbo: false } do %>
+          <%= hidden_field_tag :interval, "month" %>
+          <%= submit_tag (@account.active_subscription? && @account.subscription_interval == 'month' ? "Plano Atual Ativo" : "Assinar Plano Mensal →"), disabled: (@account.active_subscription? && @account.subscription_interval == 'month'), class: "w-full py-3.5 px-4 rounded-2xl border-2 border-indigo-600 bg-white hover:bg-indigo-50 text-indigo-700 font-bold text-sm transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-center shadow-xs" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Annual Plan Card (Featured) -->
+    <div class="relative bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 text-white shadow-2xl border-2 border-indigo-500 flex flex-col justify-between space-y-8">
+      <div class="absolute -top-3.5 right-6 bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black text-[11px] uppercase tracking-wider px-3.5 py-1 rounded-full shadow-lg">
+        Economize 42% · Mais Popular
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 text-xs font-bold uppercase tracking-wider">Anual</span>
+          <h4 class="text-xl font-bold text-white mt-2">Plano Anual</h4>
+          <p class="text-xs text-indigo-200 mt-1">Máxima economia para profissionais e empresas sérias.</p>
+        </div>
+
+        <div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold text-white">R$ 549,00</span>
+            <span class="text-sm font-semibold text-indigo-300">/ ano</span>
+          </div>
+          <p class="text-xs text-emerald-400 font-semibold mt-1">Equivale a apenas <strong>R$ 45,75/mês</strong> (economia de R$ 409,80/ano)</p>
+        </div>
+
+        <ul class="space-y-3 text-xs text-slate-200 border-t border-slate-800 pt-6">
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span><strong>Tudo do Plano Mensal incluso</strong></span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Suporte prioritário via WhatsApp / E-mail</span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Acesso antecipado a novas funcionalidades</span>
+          </li>
+          <li class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Garantia de preço congelado por 1 ano</span>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <%= form_with url: admin_billing_checkout_path, method: :post, data: { turbo: false } do %>
+          <%= hidden_field_tag :interval, "year" %>
+          <%= submit_tag (@account.active_subscription? && @account.subscription_interval == 'year' ? "Plano Atual Ativo" : "Assinar Plano Anual (42% OFF) →"), disabled: (@account.active_subscription? && @account.subscription_interval == 'year'), class: "w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-400 hover:to-violet-500 text-white font-extrabold text-sm transition-all cursor-pointer shadow-lg shadow-indigo-600/40 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-center" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

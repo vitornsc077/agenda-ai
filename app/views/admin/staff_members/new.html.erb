@@ -1,0 +1,10 @@
+<% content_for :title, "Novo Profissional" %>
+
+<div class="max-w-3xl space-y-6">
+  <div>
+    <h2 class="text-xl font-bold text-slate-900">Cadastrar Profissional na Equipe</h2>
+    <p class="text-xs text-slate-500">Adicione os dados do profissional e vincule os serviços que ele realiza.</p>
+  </div>
+
+  <%= render "form", staff_member: @staff_member, services: @services %>
+</div>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50 text-slate-900">
+  <head>
+    <title><%= content_for(:title) ? "#{yield(:title)} · AgendaAI" : "AgendaAI Admin" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+  </head>
+
+  <body class="h-full flex flex-col antialiased">
+    <div class="flex min-h-screen bg-slate-50">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-slate-900 text-slate-100 flex flex-col shrink-0 border-r border-slate-800">
+        <!-- Brand -->
+        <div class="p-6 flex items-center justify-between border-b border-slate-800/80">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-indigo-500/30">
+              ⚡
+            </div>
+            <div>
+              <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">AgendaAI</span>
+              <span class="block text-xs font-medium text-slate-400 truncate max-w-[130px]"><%= current_account&.name %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+          <%= link_to admin_root_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path == admin_root_path ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Dashboard
+          <% end %>
+
+          <%= link_to admin_calendar_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_calendar_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Calendário
+          <% end %>
+
+          <%= link_to admin_bookings_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_bookings_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            Agendamentos
+          <% end %>
+
+          <%= link_to admin_services_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_services_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Serviços
+          <% end %>
+
+          <%= link_to admin_staff_members_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_staff_members_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Equipe
+          <% end %>
+
+          <%= link_to admin_billing_path, class: "flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all #{request.path.start_with?(admin_billing_path) ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'}" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            Assinatura & Planos
+          <% end %>
+
+          <div class="pt-6 pb-2">
+            <p class="px-3.5 text-xs font-bold uppercase tracking-wider text-slate-400">Página Pública</p>
+          </div>
+
+          <% if current_account&.slug.present? %>
+            <%= link_to public_booking_path(slug: current_account.slug), target: "_blank", class: "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 hover:bg-emerald-900/40 transition-all group" do %>
+              <span class="flex items-center gap-2 truncate">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Ver Página Online
+              </span>
+              <svg class="w-4 h-4 text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            <% end %>
+          <% end %>
+        </nav>
+
+        <!-- User profile footer -->
+        <div class="p-4 border-t border-slate-800/80 bg-slate-950/40">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3 truncate">
+              <div class="w-8 h-8 rounded-full bg-indigo-900/80 border border-indigo-700 flex items-center justify-center font-bold text-xs text-indigo-200">
+                <%= current_user&.name&.first&.upcase || "U" %>
+              </div>
+              <div class="truncate">
+                <p class="text-xs font-semibold text-slate-200 truncate"><%= current_user&.name %></p>
+                <p class="text-[11px] text-slate-400 truncate"><%= current_user&.role&.titleize %></p>
+              </div>
+            </div>
+            <%= button_to session_path, method: :delete, class: "p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors", title: "Sair" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <% end %>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Topbar -->
+        <header class="bg-white border-b border-slate-200/80 px-8 py-4 flex items-center justify-between shrink-0 shadow-sm">
+          <div class="flex items-center space-x-4">
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight"><%= yield(:title) || "Visão Geral" %></h1>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <%= link_to admin_billing_path, class: "hover:opacity-90 transition-opacity" do %>
+              <% if current_account&.active_subscription? %>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-xs">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span><%= current_account.subscription_interval == "year" ? "Plano Anual Ativo" : "Plano Mensal Ativo" %></span>
+                </div>
+              <% elsif current_account&.trial? %>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold shadow-xs">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span><%= current_account.trial_days_left %> dias de teste</span>
+                </div>
+              <% else %>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold shadow-xs">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  <span>Trial Expirado</span>
+                </div>
+              <% end %>
+            <% end %>
+
+            <%= link_to new_admin_booking_path, class: "inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition-all hover:shadow hover:-translate-y-0.5" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Novo Agendamento
+            <% end %>
+          </div>
+        </header>
+
+        <!-- Expired Plan / Trial Banner -->
+        <% if current_account&.access_blocked? %>
+          <div class="mx-8 mt-4 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-lg shrink-0">
+                ⚠️
+              </div>
+              <div>
+                <strong class="text-rose-950 block text-sm font-bold">Seu plano ou período de teste expirou</strong>
+                <span class="text-rose-700">A sua página pública de agendamentos está pausada. Escolha um plano para reativar o acesso imediato.</span>
+              </div>
+            </div>
+            <%= link_to "Reativar Plano Agora →", admin_billing_path, class: "inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all shrink-0" %>
+          </div>
+        <% end %>
+
+        <!-- Flash messages -->
+        <% if notice %>
+          <div class="mx-8 mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span><%= notice %></span>
+            </div>
+          </div>
+        <% end %>
+
+        <% if alert %>
+          <div class="mx-8 mt-4 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-sm font-medium flex items-center justify-between shadow-xs">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-rose-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span><%= alert %></span>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Body -->
+        <main class="flex-1 overflow-y-auto p-8">
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

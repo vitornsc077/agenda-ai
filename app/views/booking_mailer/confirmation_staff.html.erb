@@ -1,0 +1,14 @@
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1e293b; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
+  <h2 style="color: #0f172a; margin-top: 0;">Novo agendamento recebido! 📅</h2>
+  <p>Olá <strong><%= @staff.name %></strong>,</p>
+  <p>Um novo agendamento foi realizado para você:</p>
+  
+  <ul style="list-style: none; padding: 0; background-color: #f8fafc; border-radius: 8px; padding: 16px;">
+    <li style="margin-bottom: 8px;"><strong>Cliente:</strong> <%= @client.name %> (<%= @client.email %> <%= @client.phone %>)</li>
+    <li style="margin-bottom: 8px;"><strong>Serviço:</strong> <%= @service.name %></li>
+    <li style="margin-bottom: 8px;"><strong>Data e Hora:</strong> <%= @booking.starts_at.strftime("%d/%m/%Y às %H:%M") %></li>
+    <% if @booking.notes.present? %>
+      <li style="margin-bottom: 8px;"><strong>Observações:</strong> <%= @booking.notes %></li>
+    <% end %>
+  </ul>
+</div>
