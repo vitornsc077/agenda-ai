@@ -5,6 +5,7 @@ services:
     plan: free
     region: oregon
     buildCommand: "./bin/render-build.sh"
+    preDeployCommand: "bundle exec rails db:prepare"
     startCommand: "bundle exec rails server -b 0.0.0.0 -p $PORT"
     envVars:
       - key: RAILS_ENV
